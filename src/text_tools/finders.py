@@ -5,11 +5,7 @@ from difflib import SequenceMatcher
 from .utils import round_decimal
 
 
-def find_best_string(query,
-                     corpus,
-                     step=4,
-                     flex=3,
-                     case_sensitive=False):
+def find_best_string(query, corpus, step=4, flex=3, case_sensitive=False):
     """Return best matching substring of corpus.
 
     Parameters
@@ -41,7 +37,7 @@ def find_best_string(query,
         match_values = []
         m = 0
         while m + qlen - step <= len(corpus):
-            match_values.append(ratio(query, corpus[m : m-1+qlen]))
+            match_values.append(ratio(query, corpus[m : m - 1 + qlen]))
             m += step
         return match_values
 
@@ -61,27 +57,27 @@ def find_best_string(query,
         bmv_r = match_values[round_decimal(p_r / step)]
 
         for f in range(flex):
-            ll = ratio(query, corpus[p_l - f: p_r])
+            ll = ratio(query, corpus[p_l - f : p_r])
             if ll > bmv_l:
                 bmv_l = ll
                 bp_l = p_l - f
 
-            lr = ratio(query, corpus[p_l + f: p_r])
+            lr = ratio(query, corpus[p_l + f : p_r])
             if lr > bmv_l:
                 bmv_l = lr
                 bp_l = p_l + f
 
-            rl = ratio(query, corpus[p_l: p_r - f])
+            rl = ratio(query, corpus[p_l : p_r - f])
             if rl > bmv_r:
                 bmv_r = rl
                 bp_r = p_r - f
 
-            rr = ratio(query, corpus[p_l: p_r + f])
+            rr = ratio(query, corpus[p_l : p_r + f])
             if rr > bmv_r:
                 bmv_r = rr
                 bp_r = p_r + f
 
-        return bp_l, bp_r, ratio(query, corpus[bp_l : bp_r])
+        return bp_l, bp_r, ratio(query, corpus[bp_l:bp_r])
 
     if not case_sensitive:
         query = query.lower()
@@ -89,7 +85,7 @@ def find_best_string(query,
 
     qlen = len(query)
 
-    if flex >= qlen/2:
+    if flex >= qlen / 2:
         print("Warning: flex exceeds length of query / 2. Setting to default.")
         flex = 3
 
@@ -98,4 +94,4 @@ def find_best_string(query,
 
     pos_left, pos_right, match_value = adjust_left_right_positions()
 
-    return corpus[pos_left: pos_right].strip(), match_value
+    return corpus[pos_left:pos_right].strip(), match_value
